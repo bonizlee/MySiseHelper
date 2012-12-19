@@ -19,6 +19,7 @@ namespace MysiseHelper
         string BaseURI = "";
         WebStatus CurrentStatus;
         List<StudentMark> listStuent=new List<StudentMark>();
+        FillUtility FillHelper = new FillUtility();
 
         public event EventHandler WebStatusChange;
 
@@ -26,16 +27,30 @@ namespace MysiseHelper
         {
             InitializeComponent();
 
+            InitializeProperties();
+        }
+
+        private void InitializeProperties()
+        {
             CurrentStatus = WebStatus.NotReady;
             cbbUriType.SelectedIndex = 0;
-            BaseURI = SpecialURI;
+            BaseURI = NormalURI;
             lblUrlType.Text = "正常网址 |";
             btnInput.Enabled = false;
             btnExamFirst.Enabled = false;
             btnExamSecond.Enabled = false;
             cbbUriType.SelectedIndexChanged += new EventHandler(cbbUriType_SelectedIndexChanged);
             this.WebStatusChange += new EventHandler(frmMain_WebStatusChange);
+            pgbFinish.Maximum = 1;
+            pgbFinish.Minimum = 0;
+
+            FillHelper.FillCountChange += new FillUtility.FillCountEventHandle(FillHelper_FillCountChange);
         }
+
+        void FillHelper_FillCountChange(object sender, FillEventArgs e)
+        {
+            pgbFinish.Value = e.FinishCount;
+        }      
 
         void frmMain_WebStatusChange(object sender, EventArgs e)
         {
@@ -86,7 +101,7 @@ namespace MysiseHelper
         private void frmMain_Load(object sender, EventArgs e)
         {
             brsMain.Navigate("about:blank");
-            FillUtility.ShowHelp(brsMain);
+            FillHelper.ShowHelp(brsMain);
         }
 
         private void toolBtnRegular_Click(object sender, EventArgs e)
@@ -114,15 +129,15 @@ namespace MysiseHelper
             switch (btn.Name)
             {
                 case "btnInput":
-                    finish=FillUtility.FillRegular(brsMain, listStuent);
+                    finish=FillHelper.FillRegular(brsMain, listStuent);
                     break;
 
                 case "btnExamFirst":
-                    finish = FillUtility.FillExamFirst(brsMain, listStuent);
+                    finish = FillHelper.FillExamFirst(brsMain, listStuent);
                     break;
 
                 case "btnExamSecond":
-                    finish = FillUtility.FillExamSecond(brsMain, listStuent);
+                    finish = FillHelper.FillExamSecond(brsMain, listStuent);
                     break;
 
                 default:
@@ -159,6 +174,7 @@ namespace MysiseHelper
                 {
                     int r=ExcelUtility.ReadFromExcel(openExcel.FileName, out listStuent);
                     lblLoadResult.Text = string.Format("载入{0}条数据",r);
+                    pgbFinish.Maximum = r;
                 }
                 catch (Exception ex)
                 {
@@ -169,12 +185,12 @@ namespace MysiseHelper
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            FillUtility.ShowHelp(brsMain);
+            FillHelper.ShowHelp(brsMain);
         }
 
         private void brsMain_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            WebStatus temp= FillUtility.GetPageStatus(brsMain);
+            WebStatus temp= FillHelper.GetPageStatus(brsMain);
             if (CurrentStatus != temp)
             {
                 CurrentStatus = temp;

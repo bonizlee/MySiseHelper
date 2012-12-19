@@ -14,14 +14,33 @@ namespace MysiseHelper
         ExamSecond
     }
 
+    public class FillEventArgs : EventArgs
+    {
+        public int FinishCount { get; set; }
+
+        public FillEventArgs()
+        {
+            this.FinishCount = 0;
+        }
+
+        public FillEventArgs(int count)
+        {
+            this.FinishCount = count;
+        }
+    }
+
     public class FillUtility
     {
-        public static int FillRegular(WebBrowser Browser,IList<StudentMark> Students)
+       public delegate void FillCountEventHandle(object sender,FillEventArgs e);
+
+       public event FillCountEventHandle FillCountChange;
+
+        public  int FillRegular(WebBrowser Browser,IList<StudentMark> Students)
         {
             return FillDo(Browser, Students, 6);
         }
 
-        private static int FillDo(WebBrowser Browser, IList<StudentMark> Students, int interval)
+        private int FillDo(WebBrowser Browser, IList<StudentMark> Students, int interval)
         {
             int finish = 0;
             HtmlElement marktable;
@@ -39,6 +58,7 @@ namespace MysiseHelper
                     {
                         marktable.Document.All[i + interval].InnerText = stu.Mark;
                         finish += 1;
+                        FillCountChange(this,new FillEventArgs(finish));
                         continue;
                     }
                 }
@@ -46,12 +66,12 @@ namespace MysiseHelper
             return finish;
         }
 
-        public static int FillExamFirst(WebBrowser Browser,IList<StudentMark> Students)
+        public  int FillExamFirst(WebBrowser Browser,IList<StudentMark> Students)
         {
             return FillDo(Browser, Students, 10);
         }
 
-        public static int FillExamSecond(WebBrowser Browser,IList<StudentMark> Students)
+        public  int FillExamSecond(WebBrowser Browser,IList<StudentMark> Students)
         {
             return FillDo(Browser, Students, 11);
         }
@@ -60,7 +80,7 @@ namespace MysiseHelper
         /// 显示说明
         /// </summary>
         /// <param name="Browser">浏览器控件</param>
-        public static void ShowHelp(WebBrowser Browser)
+        public  void ShowHelp(WebBrowser Browser)
         {
             Browser.Document.OpenNew(true);
             StringBuilder htmltext = new StringBuilder();
@@ -78,7 +98,7 @@ namespace MysiseHelper
 
         }
 
-        static string GetPageTitle(WebBrowser Browser)
+         string GetPageTitle(WebBrowser Browser)
         {
             string Title = string.Empty;
             HtmlElementCollection span = Browser.Document.GetElementsByTagName("span");
@@ -89,7 +109,7 @@ namespace MysiseHelper
             return Title;
         }
 
-        public static WebStatus GetPageStatus(WebBrowser Browser)
+        public  WebStatus GetPageStatus(WebBrowser Browser)
         {
             WebStatus status ;
             string title=GetPageTitle(Browser);            

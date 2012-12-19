@@ -32,6 +32,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblUrlType = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblWebStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblFillCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.brsMain = new System.Windows.Forms.WebBrowser();
@@ -50,12 +51,12 @@
             this.btnExamSecond = new System.Windows.Forms.Button();
             this.btnExamFirst = new System.Windows.Forms.Button();
             this.btnInput = new System.Windows.Forms.Button();
-            this.lblWebStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pgbFinish = new System.Windows.Forms.ToolStripProgressBar();
             this.tableLayoutPanel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -91,7 +92,8 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblUrlType,
             this.lblWebStatus,
-            this.lblFillCount});
+            this.lblFillCount,
+            this.pgbFinish});
             this.statusStrip1.Location = new System.Drawing.Point(0, 676);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1008, 25);
@@ -103,6 +105,12 @@
             this.lblUrlType.Name = "lblUrlType";
             this.lblUrlType.Size = new System.Drawing.Size(77, 20);
             this.lblUrlType.Text = "正常网址 |";
+            // 
+            // lblWebStatus
+            // 
+            this.lblWebStatus.Name = "lblWebStatus";
+            this.lblWebStatus.Size = new System.Drawing.Size(129, 20);
+            this.lblWebStatus.Text = "请先进入登分页面";
             // 
             // lblFillCount
             // 
@@ -273,12 +281,6 @@
             this.btnInput.UseVisualStyleBackColor = true;
             this.btnInput.Click += new System.EventHandler(this.btnInput_Click);
             // 
-            // lblWebStatus
-            // 
-            this.lblWebStatus.Name = "lblWebStatus";
-            this.lblWebStatus.Size = new System.Drawing.Size(129, 20);
-            this.lblWebStatus.Text = "请先进入登分页面";
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.label4);
@@ -293,14 +295,14 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "简要说明";
             // 
-            // label1
+            // label4
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 26);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(258, 20);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "1.选择服务器地址，再点击需要登分类型";
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(267, 51);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(328, 20);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "4.点击操作区的对应按钮填分数，最后在浏览区提交";
             // 
             // label2
             // 
@@ -320,14 +322,20 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "3.载入登分的Excel表格，具体格式可查看说明";
             // 
-            // label4
+            // label1
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(267, 51);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(328, 20);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "4.点击操作区的对应按钮填分数，最后在浏览区提交";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 26);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(258, 20);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "1.选择服务器地址，再点击需要登分类型";
+            // 
+            // pgbFinish
+            // 
+            this.pgbFinish.Name = "pgbFinish";
+            this.pgbFinish.Size = new System.Drawing.Size(100, 19);
+            this.pgbFinish.Step = 5;
             // 
             // frmMain
             // 
@@ -386,5 +394,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ToolStripProgressBar pgbFinish;
     }
 }
