@@ -6,6 +6,10 @@ using System.Windows.Forms;
 
 namespace MysiseHelper
 {
+    #region 辅助类    
+    /// <summary>
+    /// 页面状态枚举
+    /// </summary>
     public enum WebStatus
     {
         NotReady,
@@ -13,33 +17,92 @@ namespace MysiseHelper
         ExamFirst,
         ExamSecond
     }
-
+    /// <summary>
+    /// 完成填充数量的消息参数
+    /// </summary>
     public class FillEventArgs : EventArgs
     {
-        public int FinishCount { get; set; }
+        int _FinishCount;
+        public int FinishCount
+        {
+            get { return this._FinishCount; }
+        }
 
         public FillEventArgs()
         {
-            this.FinishCount = 0;
+            this._FinishCount = 0;
         }
 
         public FillEventArgs(int count)
         {
-            this.FinishCount = count;
+            this._FinishCount = count;
         }
     }
 
+    /// <summary>
+    /// 页面状态改变消息参数
+    /// </summary>
+    public class WebStatusEventArgs:EventArgs
+    {
+        WebStatus _CurrentStatus;
+       public WebStatus CurrentStatus{
+           get { return _CurrentStatus; }
+       }
+
+        public WebStatusEventArgs(WebStatus status)
+        {
+            _CurrentStatus = status;
+        }
+    }
+
+    /// <summary>
+    /// 填充数目改变事件委托
+    /// </summary>
+    /// <param name="sender">发起者</param>
+    /// <param name="e">已完成的填充个位</param>
+    public delegate void FillCountChangeEventHandle(object sender, FillEventArgs e);
+
+    /// <summary>
+    /// 页面状态改变事件委托
+    /// </summary>
+    /// <param name="sender">发起者</param>
+    /// <param name="e">更新的页面状态</param>
+    public delegate void WebStatusChangeEventHandle(object sender, WebStatusEventArgs e);   
+    #endregion
+
     public class FillUtility
     {
-       public delegate void FillCountEventHandle(object sender,FillEventArgs e);
+        #region 事件
+        /// <summary>
+        /// 页面状态改变
+        /// </summary>
+        public event WebStatusChangeEventHandle WebStatusChange;
+        /// <summary>
+        /// 填充的数量改变
+        /// </summary>
+        public event FillCountChangeEventHandle FillCountChange;
+        #endregion
 
-       public event FillCountEventHandle FillCountChange;
+        #region 属性
+        /// <summary>
+        /// 当前页面状态
+        /// </summary>
+        WebStatus CurrentStatus;
+        #endregion
 
-        public  int FillRegular(WebBrowser Browser,IList<StudentMark> Students)
+        public FillUtility()
         {
-            return FillDo(Browser, Students, 6);
+            CurrentStatus = WebStatus.NotReady;
         }
 
+        #region 内部操作方法
+        /// <summary>
+        /// 填充学生成绩
+        /// </summary>
+        /// <param name="Browser">浏览器</param>
+        /// <param name="Students">学生列表</param>
+        /// <param name="interval">Dom的间隔</param>
+        /// <returns></returns>
         private int FillDo(WebBrowser Browser, IList<StudentMark> Students, int interval)
         {
             int finish = 0;
@@ -58,7 +121,8 @@ namespace MysiseHelper
                     {
                         marktable.Document.All[i + interval].InnerText = stu.Mark;
                         finish += 1;
-                        FillCountChange(this,new FillEventArgs(finish));
+                        //若填写了一个学生，触发填写事件
+                        FillCountChange(this, new FillEventArgs(finish));
                         continue;
                     }
                 }
@@ -66,14 +130,68 @@ namespace MysiseHelper
             return finish;
         }
 
-        public  int FillExamFirst(WebBrowser Browser,IList<StudentMark> Students)
+        /// <summary>
+        /// 获取页面的内容部分标题
+        /// </summary>
+        /// <param name="Browser"></param>
+        /// <returns>标题字符串</returns>
+        private string GetPageTitle(WebBrowser Browser)
         {
-            return FillDo(Browser, Students, 10);
+            string Title = string.Empty;
+            HtmlElementCollection span = Browser.Document.GetElementsByTagName("span");
+            if (span != null)
+            {
+                Title = span[0].InnerText;
+            }
+            return Title.Trim();
         }
 
+        /// <summary>
+        /// 计算页面有多少个Table，少于5个表示没有查询出学生数据
+        /// </summary>
+        /// <param name="Browser"></param>
+        /// <returns></returns>
+        private int CountPageTable(WebBrowser Browser)
+        {
+            HtmlElementCollection table = Browser.Document.GetElementsByTagName("table");
+
+            return table.Count;
+        }
+        #endregion
+
+        #region 公开方法
+
+        /// <summary>
+        /// 填写平时成绩
+        /// </summary>
+        /// <param name="Browser"></param>
+        /// <param name="Students"></param>
+        /// <returns></returns>
+        public  int FillRegular(WebBrowser Browser,IList<StudentMark> Students)
+        {
+            return FillDo(Browser, Students, 6);//平时成绩页面学号与分数栏直接间隔6个DOM对象
+        }        
+
+        /// <summary>
+        /// 填写第一次考试成绩
+        /// </summary>
+        /// <param name="Browser"></param>
+        /// <param name="Students"></param>
+        /// <returns></returns>
+        public  int FillExamFirst(WebBrowser Browser,IList<StudentMark> Students)
+        {
+            return FillDo(Browser, Students, 10);//考试成绩第一次登记页面学号与分数栏直接间隔10个DOM对象
+        }
+
+        /// <summary>
+        /// 填写第二次考试成绩
+        /// </summary>
+        /// <param name="Browser"></param>
+        /// <param name="Students"></param>
+        /// <returns></returns>
         public  int FillExamSecond(WebBrowser Browser,IList<StudentMark> Students)
         {
-            return FillDo(Browser, Students, 11);
+            return FillDo(Browser, Students, 11);//考试成绩第二次登记页面学号与分数栏直接间隔11个DOM对象
         }
 
         /// <summary>
@@ -84,7 +202,7 @@ namespace MysiseHelper
         {
             Browser.Document.OpenNew(true);
             StringBuilder htmltext = new StringBuilder();
-            htmltext.Append("<html><body style=\"text-align:center\"><div style=\"width:800px; margin:0 auto; padding:auto; text-align:left\"><h2>华软登分助手使用说明:</h2><ol>");
+            htmltext.Append("<html><body style=\"text-align:center\"><div style=\"width:800px; margin:0 auto; padding:auto; text-align:left\"><h2>华软登分助手（Ver 0.5.0）使用说明:</h2><ol>");
             htmltext.Append("<li>首先选择服务器地址</li>");
             htmltext.Append("<li>再点击登分的类型</li>");
             htmltext.Append("<li>在浏览器区域中，登录系统，并选择需要登记的项目，直到浏览器显示学生名单</li>");
@@ -95,40 +213,45 @@ namespace MysiseHelper
             htmltext.Append("<P><strong>本软件仅供测试用途，用户登记成绩请慎重检查，以免发生意外！！！</strong></P>");
             htmltext.Append("</div></body></html>");
             Browser.Document.Write(htmltext.ToString());
+            WebStatusChange(this, new WebStatusEventArgs(WebStatus.NotReady));
+        }        
 
-        }
-
-         string GetPageTitle(WebBrowser Browser)
-        {
-            string Title = string.Empty;
-            HtmlElementCollection span = Browser.Document.GetElementsByTagName("span");
-            if (span!=null)
-            {
-                Title = span[0].InnerText;
-            }            
-            return Title;
-        }
-
-        public  WebStatus GetPageStatus(WebBrowser Browser)
+        /// <summary>
+        /// 更新页面状态
+        /// </summary>
+        /// <param name="Browser"></param>
+        public  void GetPageStatus(WebBrowser Browser)
         {
             WebStatus status ;
-            string title=GetPageTitle(Browser);            
+            status = WebStatus.NotReady;
+            string title=GetPageTitle(Browser);
+            int tablecount = CountPageTable(Browser);//4 5
             switch (title.Trim())
             {
                 case "登平时成绩":
-                    status = WebStatus.RegularGrade;
+                    if(tablecount>4)
+                        status = WebStatus.RegularGrade;
                     break;
                 case "第一次登记成绩":
-                    status = WebStatus.ExamFirst;
+                    if (tablecount > 4)
+                        status = WebStatus.ExamFirst;
                     break;
                 case "第二次登记成绩":
-                    status = WebStatus.ExamSecond;
+                    if (tablecount > 4)
+                        status = WebStatus.ExamSecond;
                     break;
                 default:
                     status = WebStatus.NotReady;
                     break;
             }
-            return status;
+
+            //若新状态，触发状态改变事件
+            if (CurrentStatus != status)
+            {
+                CurrentStatus = status;
+                WebStatusChange(this, new WebStatusEventArgs(CurrentStatus));
+            }            
         }
+        #endregion
     }
 }

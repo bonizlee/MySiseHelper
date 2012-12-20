@@ -34,6 +34,7 @@
             this.lblUrlType = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblWebStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblFillCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.pgbFinish = new System.Windows.Forms.ToolStripProgressBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.brsMain = new System.Windows.Forms.WebBrowser();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -56,7 +57,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.pgbFinish = new System.Windows.Forms.ToolStripProgressBar();
             this.tableLayoutPanel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -92,8 +92,8 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblUrlType,
             this.lblWebStatus,
-            this.lblFillCount,
-            this.pgbFinish});
+            this.pgbFinish,
+            this.lblFillCount});
             this.statusStrip1.Location = new System.Drawing.Point(0, 676);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1008, 25);
@@ -109,14 +109,20 @@
             // lblWebStatus
             // 
             this.lblWebStatus.Name = "lblWebStatus";
-            this.lblWebStatus.Size = new System.Drawing.Size(129, 20);
-            this.lblWebStatus.Text = "请先进入登分页面";
+            this.lblWebStatus.Size = new System.Drawing.Size(137, 20);
+            this.lblWebStatus.Text = "请先进入登分页面 |";
             // 
             // lblFillCount
             // 
             this.lblFillCount.Name = "lblFillCount";
-            this.lblFillCount.Size = new System.Drawing.Size(165, 20);
-            this.lblFillCount.Text = " | 完成了0个学生的填写";
+            this.lblFillCount.Size = new System.Drawing.Size(157, 20);
+            this.lblFillCount.Text = " 完成了0个学生的填写";
+            // 
+            // pgbFinish
+            // 
+            this.pgbFinish.Name = "pgbFinish";
+            this.pgbFinish.Size = new System.Drawing.Size(100, 19);
+            this.pgbFinish.Step = 5;
             // 
             // groupBox2
             // 
@@ -330,12 +336,6 @@
             this.label1.Size = new System.Drawing.Size(258, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "1.选择服务器地址，再点击需要登分类型";
-            // 
-            // pgbFinish
-            // 
-            this.pgbFinish.Name = "pgbFinish";
-            this.pgbFinish.Size = new System.Drawing.Size(100, 19);
-            this.pgbFinish.Step = 5;
             // 
             // frmMain
             // 
