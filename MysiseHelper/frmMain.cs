@@ -16,6 +16,7 @@ namespace MysiseHelper
         
         string NormalURI = @"http://class.sise.com.cn:7001/SISEWeb/";
         string SpecialURI = @"http://172.16.3.78:7001/SISEWeb/";
+        
         string BaseURI = "";
         
         List<StudentMark> listStuent=new List<StudentMark>();
@@ -130,9 +131,9 @@ namespace MysiseHelper
         private void toolBtnRegular_Click(object sender, EventArgs e)
         {
             string url = BaseURI + @"exam/registerExamResultAction.do?method=doSelectCourseCommonMain";
-//#if DEBUG
- //           url = @"http://localhost/s_do.htm";
-//#endif           
+//#if debug
+//            url = @"http://localhost/1.htm";
+//#endif
 
             brsMain.Navigate(url);
         }
@@ -186,8 +187,8 @@ namespace MysiseHelper
             string url = BaseURI + @"exam/registerExamResultAction.do?method=doSelectCourseMain";
 
 //#if DEBUG
- //url = @"http://localhost/first.htm";
- //url = @"http://localhost/second.htm";
+            //url = @"http://localhost/1.htm";
+            //url = @"http://localhost/first.htm";
 //#endif          
 
             brsMain.Navigate(url);
