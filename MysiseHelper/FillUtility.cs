@@ -115,7 +115,7 @@ namespace MysiseHelper
 
             foreach (StudentMark stu in Students)
             {
-                int i = 90;
+                int i = 87;//新IE内核好像要从87开始就有数据，旧版从90才开始有数据
                 for (; i < marktable.Document.All.Count; i++)
                 {
                     if (marktable.Document.All[i].InnerText == stu.SID)
