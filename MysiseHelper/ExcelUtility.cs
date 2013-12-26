@@ -32,17 +32,17 @@ namespace MysiseHelper
                myCommand.Fill(ds, "Mark");
                DataTable dt = ds.Tables[0];
                if (dt != null && dt.Rows.Count > 0)
-             {
-                 foreach (DataRow item in dt.Rows)
-                 {
-                     Students.Add(new StudentMark()
-                     {
-                         SID = item["学号"].ToString(),
-                         SName = item["姓名"].ToString(),
-                         Mark = item["成绩"].ToString()
-                     });
-                     count++;
-                 }
+               {
+                   foreach (DataRow item in dt.Rows)
+                   {
+                       Students.Add(new StudentMark()
+                       {
+                           SID = item["学号"].ToString(),
+                           SName = item["姓名"].ToString(),
+                           Mark = item["成绩"].ToString()
+                       });
+                       count++;
+                   }
                }
                conn.Close();
            }

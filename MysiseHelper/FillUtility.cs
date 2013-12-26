@@ -115,7 +115,7 @@ namespace MysiseHelper
 
             foreach (StudentMark stu in Students)
             {
-                int i = 90;
+                int i = 86;//起始偏移量
                 for (; i < marktable.Document.All.Count; i++)
                 {
                     if (marktable.Document.All[i].InnerText == stu.SID)
@@ -260,7 +260,7 @@ namespace MysiseHelper
         {
             Browser.Document.OpenNew(true);
             StringBuilder htmltext = new StringBuilder();
-            htmltext.Append("<html><body style=\"text-align:center\"><div style=\"width:800px; margin:0 auto; padding:auto; text-align:left\"><h2>华软登分助手（Ver 0.8.0）使用说明:</h2><ol>");
+            htmltext.Append("<html><body style=\"text-align:center\"><div style=\"width:800px; margin:0 auto; padding:auto; text-align:left\"><h2>华软登分助手（Ver 0.8.1）使用说明:</h2><ol>");
             htmltext.Append("<li>首先选择服务器地址</li>");
             htmltext.Append("<li>再点击登分的类型</li>");
             htmltext.Append("<li>在浏览器区域中，登录系统，并选择需要登记的项目，直到浏览器显示学生名单</li>");
@@ -269,6 +269,7 @@ namespace MysiseHelper
             htmltext.Append("<li>点击对应的登分按钮：平时成绩、考试1、考试2。等待软件自动填充</li>");
             htmltext.Append("<li>检查所有学生分数无误后，可以在浏览区域点击提交</li></ol>");
             htmltext.Append("<ul><li><b>0.8.0更新内容，支持考查课程的成绩登记。</b></li>");
+            htmltext.Append("<li><b>0.8.1更新内容，修复IE10+内核引致第一个学生成绩无法登入问题。</b></li>");
             htmltext.Append("</ul>");
             htmltext.Append("<P><strong>本软件仅供测试用途，用户登记成绩请慎重检查，以免发生意外！！！</strong></P>");
             htmltext.Append("</div></body></html>");
